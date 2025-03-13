@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { useState } from 'react';
 
 const NewTodo = (props) => {
     /**
@@ -9,6 +10,8 @@ const NewTodo = (props) => {
      * 5. extract input daripada form
      * 6. panggil API
      */
+
+    const [title, setTitle] = useState('');
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -34,21 +37,23 @@ const NewTodo = (props) => {
             padding: "1rem",
             backgroundColor: "#444",
             borderRadius: "0.5rem",
-        }}>
+        }} disabled={!title.trim()}>
             <fieldset style={{
                 display: 'flex',
                 flexDirection: 'column',
                 gap: '0.5rem',
             }}>
                 <label htmlFor="title">Title</label>
-                <input type="text" id="title" name="title" style={{
+                <input type="text" id="title" name="title" onChange={(event) => {
+                    setTitle(event.target.value);
+                }} style={{
                     padding: '0.5rem 0.75rem',
                     borderRadius: '0.25rem',
                     border: 'none',
                     backgroundColor: '#fff',
                     color: '#000',
                     outline: 'none',
-                }} />
+                }} required />
             </fieldset>
 
             <fieldset style={{
@@ -67,7 +72,7 @@ const NewTodo = (props) => {
                 }} />
             </fieldset>
 
-            <button type="submit">Submit</button>
+            <button type="submit" className="submit" disabled={!title.trim()}>Submit</button>
         </form>
     )
 }
