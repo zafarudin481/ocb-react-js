@@ -49,9 +49,40 @@ function App() {
     });
   };
 
+  const handleChecked = (event) => {
+    const targetId = event.target.id;
+    const todoChecked = event.target.checked;
+
+    setTodos((prevTodo) => {
+      const updatedTodos = prevTodo.map((todo) => {
+        // return early if the id did not match to avoid changing unrelated todo item
+        if (todo.id != targetId) {
+          return todo;
+        }
+
+        // if id is matched, we changed the "checked"
+        const updatedItem = {
+          // copy existing todo details
+          ...todo,
+          // update checked status
+          checked: todoChecked,
+        };
+
+        // return updated todos item
+        return updatedItem;
+      });
+
+      return updatedTodos;
+    });
+  };
 
   return (
-    <>
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '0.5rem',
+      padding: '1rem',
+    }}>
       {/* <pre>{JSON.stringify(todos, null, 2)}</pre> */}
       <NewTodo addNewTodo={handleAddNewTodo} />
       {
@@ -63,15 +94,13 @@ function App() {
               title={todo.title}
               description={todo.description}
               checked={todo.checked}
-              toggleDone={() => {
-                // setTest(event.target.checked);
-              }}
+              toggleDone={handleChecked}
             />
           )
         })
       }
 
-    </>
+    </div>
   )
 }
 
