@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Card from "./components/Card";
 import NewTodo from './components/NewTodo';
+import RegisterUser from './components/RegisterUser';
+import { getTodoList } from '../api/todo';
 
 // const mockData = [
 //   {
@@ -26,7 +28,19 @@ import NewTodo from './components/NewTodo';
 
 function App() {
   const [todos, setTodos] = useState([]);
-  // const [test, setTest] = useState(false);
+  console.log(todos);
+
+  const [todoList, setTodoList] = useState();
+  const token = window.localStorage.getItem('token');
+
+  const getTodoListFromAPI = async () => {
+    const data = await getTodoList();
+    setTodoList(data);
+  };
+
+  useEffect(() => {
+    getTodoListFromAPI();
+  }, []);
 
   const handleAddNewTodo = ({
     title,
@@ -83,17 +97,20 @@ function App() {
       gap: '0.5rem',
       padding: '1rem',
     }}>
-      {/* <pre>{JSON.stringify(todos, null, 2)}</pre> */}
+      {/* <pre>{JSON.stringify(todoList, null, 2)}</pre> */}
+      {
+        !token && <RegisterUser />
+      }
       <NewTodo addNewTodo={handleAddNewTodo} />
       {
-        todos.map((todo) => {
+        todoList?.map((todo) => {
           return (
             <Card
-              id={todo.id}
-              key={todo.id}
+              id={todo._id}
+              key={todo._id}
               title={todo.title}
               description={todo.description}
-              checked={todo.checked}
+              checked={todo.completed}
               toggleDone={handleChecked}
             />
           )
@@ -104,4 +121,4 @@ function App() {
   )
 }
 
-export default App
+export default App;
